@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+  <name>gnd_lssmap_particle_evaluator</name>
+  <version>0.1.0</version>
+  <description>
+
+     gnd_lssmap_particle_evaluator
+
+  </description>
+  <maintainer email="tyamada@gmail.com">tyamada</maintainer>
+  <author>tyamada</author>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>gnd_particle_localizer</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>gnd_geometry2d_msgs</build_depend>
+  <build_depend>gndlib</build_depend>
+  <build_depend>gnd_rosutil</build_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>gnd_particle_localizer</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>gnd_geometry2d_msgs</run_depend>
+  <run_depend>gndlib</run_depend>
+  <run_depend>gnd_rosutil</run_depend>
+
+</package>
