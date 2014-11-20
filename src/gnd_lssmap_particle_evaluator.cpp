@@ -225,6 +225,7 @@ int main(int argc, char **argv) {
 
 	if( ros::ok() ){ // ---> operate
 		ros::Rate loop_rate(1000);
+		ros::AsyncSpinner spinner(2);
 
 		double time_start = 0;
 		double time_current = 0;
@@ -293,27 +294,31 @@ int main(int argc, char **argv) {
 
 		// ---> main loop
 		fprintf(stderr, " => %s main loop start\n", node_config.node_name.value);
+		spinner.start();
 		while( ros::ok() ) {
 			// blocking to avoid the waste of computing resource
 			loop_rate.sleep();
 
 			// read topics
-			ros::spinOnce();
+//			ros::spinOnce();
 
 			// current time
 			time_current = ros::Time::now().toSec();
 
 			// ---> update point-cloud
-			if( time_current > schedule_update_pointcloud
-					&& (msgreader_pointcloud.copy_new( &msg_pointcloud, msg_pointcloud.header.seq ) == 0) ) {
-				// next time
+			if( time_current > schedule_update_pointcloud &&
+				(msgreader_pointcloud.copy_new( &msg_pointcloud, msg_pointcloud.header.seq ) == 0) ) {
+
+				// schedule the next pointcloud reading
 				schedule_update_pointcloud = gnd_loop_next(time_current, time_start, node_config.period.value );
+
 			} // <--- update point-cloud
 
 			// ---> evaluate particle weights
 			if( time_current > schedule_evaluate_particles
-					&& msgreader_particles.is_updated( &msg_pointcloud.header.stamp )
-					&& gnd::rosutil::is_sequence_updated(seq_prev_pointcloud, msg_pointcloud.header.seq )) {
+					&& gnd::rosutil::is_sequence_updated(seq_prev_pointcloud, msg_pointcloud.header.seq )
+				) {
+
 
 				if( msgreader_particles.copy_at_time( &msg_particles, &msg_pointcloud.header.stamp ) != 0 ) {
 					// fail to read
@@ -470,6 +475,7 @@ int main(int argc, char **argv) {
 			} // <--- status display
 
 		} // <--- main loop
+		spinner.stop();
 
 	} // <--- operate
 
