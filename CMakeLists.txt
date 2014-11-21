@@ -14,7 +14,7 @@ find_package(catkin
   roscpp
   std_msgs
   sensor_msgs
-  gnd_geometry2d_msgs
+  gnd_msgs
   gndlib
   gnd_rosutil
   gnd_particle_localizer
@@ -27,7 +27,7 @@ catkin_package(
    roscpp
    std_msgs
    sensor_msgs
-   gnd_geometry2d_msgs
+   gnd_msgs
    gndlib
    gnd_rosutil
    gnd_particle_localizer

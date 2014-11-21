@@ -11,8 +11,8 @@
 #include "ros/ros.h"
 
 #include "sensor_msgs/PointCloud.h"
-#include "gnd_particle_localizer/msg_localization_particles2d_stamped.h"
-#include "gnd_particle_localizer/msg_localization_particle_weights_stamped.h"
+#include "gnd_particle_localizer/msg_particles_pose2d_stamped.h"
+#include "gnd_particle_localizer/msg_particle_weights_stamped.h"
 #include "gnd/gnd_rosmsg_reader.hpp"
 
 #include "gnd/gnd-bmp.hpp"
@@ -22,13 +22,13 @@
 
 #include <float.h>
 
-typedef std_msgs::Header::_seq_type											sequence_id_t;
-typedef sensor_msgs::PointCloud												msg_pointcloud_t;
-typedef gnd::rosutil::rosmsgs_reader_stamped<msg_pointcloud_t>				msgreader_pointcloud_t;
-typedef gnd_particle_localizer::msg_localization_particles2d_stamped		msg_particles_t;
-typedef gnd::rosutil::rosmsgs_reader_stamped<msg_particles_t>				msgreader_particles_t;
-typedef gnd_particle_localizer::msg_localization_particle_weights_stamped	msg_particle_weights_t;
-typedef msg_particle_weights_t::_weights_type::value_type					particle_weight_t;
+typedef std_msgs::Header::_seq_type								sequence_id_t;
+typedef sensor_msgs::PointCloud									msg_pointcloud_t;
+typedef gnd::rosutil::rosmsgs_reader_stamped<msg_pointcloud_t>	msgreader_pointcloud_t;
+typedef gnd_particle_localizer::msg_particles_pose2d_stamped	msg_particles_t;
+typedef gnd::rosutil::rosmsgs_reader_stamped<msg_particles_t>	msgreader_particles_t;
+typedef gnd_particle_localizer::msg_particle_weights_stamped	msg_particle_weights_t;
+typedef msg_particle_weights_t::_weights_type::value_type		particle_weight_t;
 
 int main(int argc, char **argv) {
 
