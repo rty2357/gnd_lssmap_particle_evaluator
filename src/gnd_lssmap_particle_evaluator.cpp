@@ -225,7 +225,6 @@ int main(int argc, char **argv) {
 
 	if( ros::ok() ){ // ---> operate
 		ros::Rate loop_rate(1000);
-		ros::AsyncSpinner spinner(2);
 
 		double time_start = 0;
 		double time_current = 0;
@@ -294,13 +293,12 @@ int main(int argc, char **argv) {
 
 		// ---> main loop
 		fprintf(stderr, " => %s main loop start\n", node_config.node_name.value);
-		spinner.start();
 		while( ros::ok() ) {
 			// blocking to avoid the waste of computing resource
 			loop_rate.sleep();
 
 			// read topics
-//			ros::spinOnce();
+			ros::spinOnce();
 
 			// current time
 			time_current = ros::Time::now().toSec();
@@ -323,6 +321,9 @@ int main(int argc, char **argv) {
 				if( msgreader_particles.copy_at_time( &msg_particles, &msg_pointcloud.header.stamp ) != 0 ) {
 					// fail to read
 				}
+//				else if( !msgreader_particles.is_updated(&msg_pointcloud.header.stamp) ) {
+//
+//				}
 				else if( msg_particles.poses.size() == 0) {
 					// particles data is invalid (no particle)
 				}
@@ -464,18 +465,20 @@ int main(int argc, char **argv) {
 				nline_display++; fprintf(stderr, "\x1b[K                  :  max log likelihood %6.04lf\n", log_likelihood_max );
 				nline_display++; fprintf(stderr, "\x1b[K        particles : topic name \"%s\" (subscribe)\n", node_config.topic_name_particles.value );
 				nline_display++; fprintf(stderr, "\x1b[K                  : latest seq %d\n", msg_particles.header.seq );
-				nline_display++; fprintf(stderr, "\x1b[K                  : size %d [number of particles]\n", msg_particles.poses.size() );
+				nline_display++; fprintf(stderr, "\x1b[K                  :      stamp %.04lf [sec]\n", msg_particles.header.stamp.toSec() );
+				nline_display++; fprintf(stderr, "\x1b[K                  :       size %d [number of particles]\n", msg_particles.poses.size() );
 				nline_display++; fprintf(stderr, "\x1b[K      point cloud : topic name \"%s\" (subscribe)\n", node_config.topic_name_pointcloud.value );
 				nline_display++; fprintf(stderr, "\x1b[K                  : latest seq %d\n", msg_pointcloud.header.seq );
-				nline_display++; fprintf(stderr, "\x1b[K                  : size %d, used %d\n", msg_pointcloud.points.size(), cnt_used_points_display );
+				nline_display++; fprintf(stderr, "\x1b[K                  :      stamp %.04lf [sec]\n", msg_pointcloud.header.stamp.toSec() );
+				nline_display++; fprintf(stderr, "\x1b[K                  :       size %d, used %d\n", msg_pointcloud.points.size(), cnt_used_points_display );
 				nline_display++; fprintf(stderr, "\x1b[K   data associate : stamp diff %7.04lf [sec] (particles - point-cloud)\n", diff_time_particles_and_pointcloud );
+				nline_display++; fprintf(stderr, "\x1b[K                  : stamp %.0lf [sec] (particles)\n", msg_particles.header.stamp.toSec() );
 
 				// next time
 				schedule_display = gnd_loop_next( time_current, time_start, node_config.period_cui_status_display.value );
 			} // <--- status display
 
 		} // <--- main loop
-		spinner.stop();
 
 	} // <--- operate
 

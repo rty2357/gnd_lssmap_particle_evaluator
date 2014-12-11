@@ -60,6 +60,7 @@ add_executable(gnd_lssmap_particle_evaluator src/gnd_lssmap_particle_evaluator.c
 target_link_libraries(gnd_lssmap_particle_evaluator ${catkin_LIBRARIES})
 install(TARGETS gnd_lssmap_particle_evaluator 
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+add_dependencies(gnd_lssmap_particle_evaluator sensor_msgs_generate_messages_cpp gnd_particle_localizer_generate_messages_cpp)
 
 ##############################################################################
 # Test
