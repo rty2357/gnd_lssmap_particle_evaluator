@@ -80,6 +80,7 @@ int main(int argc, char **argv) {
 	msg_particle_weights_t	msg_particle_weights;		// particle weight message
 
 	gnd::bmp32_t map;
+	double value_out_of_map = 0.0;
 
 	{ // ---> initialize
 		int phase = 0;
@@ -126,9 +127,27 @@ int main(int argc, char **argv) {
 					ros::shutdown();
 				}
 				else {
+					int i;
 					map.pset_origin(x, y);
 
 					gnd::bmp::write32("load.bmp", &map);
+
+					// set out of map value
+					value_out_of_map = 0;
+					for( i = 0; i < 100; i++ ) {
+						int j;
+						// sampling from end of map
+						j = (map.row() * (1.0 - DBL_EPSILON)) * gnd::random_uniform();
+						value_out_of_map += map.value(j, 0);
+						j = (map.row() * (1.0 - DBL_EPSILON)) * gnd::random_uniform();
+						value_out_of_map += map.value(j, map.column() - 1);
+
+						j = (map.column() * (1.0 - DBL_EPSILON)) * gnd::random_uniform();
+						value_out_of_map += map.value(0, j);
+						j = (map.column() * (1.0 - DBL_EPSILON)) * gnd::random_uniform();
+						value_out_of_map += map.value(map.row() - 1, j);
+					}
+					value_out_of_map /= (4 * 100);
 
 					fprintf(stdout, "    ... ok, output \"load.bmp\" to confirm the load map\n");
 				}
@@ -397,7 +416,7 @@ int main(int argc, char **argv) {
 								if( !map.ppointer(x_gl, y_gl) ) {
 									// out of map range
 									// deal as minimum value except zero
-									msg_particle_weights.weights[i] += log( (float) 1.0 );
+									msg_particle_weights.weights[i] += log( (float) value_out_of_map + 1.0 );
 								}
 								else {
 									msg_particle_weights.weights[i] += log( (float) map.pvalue(x_gl, y_gl) + 1.0 );
